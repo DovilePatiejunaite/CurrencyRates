@@ -1,25 +1,27 @@
+import java.util.ArrayList;
 public class UrlFormatter {
-    ArrayList<> date;
-    String[] CurrencyCodes;
-
-    public void setCurrencyCode(String[] currencyCode) {
-        CurrencyCodes = currencyCode;
+    ArrayList<String> dates = new ArrayList<>();
+    ArrayList<String> currencyCodes = new ArrayList<>();
+    public void setCurrencyCode(ArrayList currencyCode) {
+        this.currencyCodes = currencyCode;
     }
 
-    public void setDate(String[] date) {
-        this.date = date;
+    public void setDate(ArrayList date) {
+        this.dates = dates;
     }
 
 
-    public String[] getCurrencyCode() {
-        return CurrencyCodes;
+    public ArrayList<String> getCurrencyCodes() {
+        return currencyCodes;
     }
 
-    public String[] getDate() {
-        return date;
+    public ArrayList<String> getDates() {
+        return dates;
     }
 
-    public String[] createUrl(){
-        if()
+    public ArrayList<String> createUrl(){
+
+        ArrayList<String> urls = new ArrayList<>();
+        return urls;
     }
 }
