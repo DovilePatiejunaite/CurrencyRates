@@ -1,10 +1,14 @@
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.net.*;
+import java.io.*;
 public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        List<String> dates = new ArrayList<String>();
-        List<String> codes = new ArrayList<String>();
+        ArrayList<String> dates = new ArrayList<String>();
+        ArrayList<String> codes = new ArrayList<String>();
         for(int i = 0; i < args.length; i++) {
             if(args[i].equals("-d")){
                 int j=i+1;
@@ -33,6 +37,12 @@ public class Main {
         }
         DataExtractor d = new DataExtractor();
         Counter c = new Counter();
-        c.count( d.download("yolo"));
+        UrlFormatter u = new UrlFormatter();
+        u.setCurrencyCodes(codes);
+        u.setDates(dates);
+        c.count( d.download(u.createUrl()));
+        for(int i=0;i < codes.size() ;i++){
+            System.out.println(codes.get(i));
+        }
     }
 }
