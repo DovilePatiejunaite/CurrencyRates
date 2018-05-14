@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//Klasė, kurianti url, kurie skirti csv failų su duomenimis apie valiutų kursus atsisiuntimui
+//Klasė, kurianti url, kurie skirti csv failų su duomenimis apie valiutų kursus, atsisiuntimui
 
 public class UrlFormatter {
     private ArrayList<String> currencyCodes = new ArrayList<>();
