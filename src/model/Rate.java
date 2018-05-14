@@ -1,14 +1,14 @@
 package model;
+import java.math.BigDecimal;
 
-public class Rate {
-    String name;
-    String code;
-    Float rate;
-    String date;
+public class Rate{
+    private String name;
+    private String code;
+    private BigDecimal rate;
 
-    public Rate( String name, String code, float rate, String date){
+
+    public Rate( String name, String code, BigDecimal rate){
         try{
-            this.date = date;
             this.name = name;
             this.code = code;
             this.rate = rate;
@@ -16,27 +16,8 @@ public class Rate {
             e.getMessage();
         }
     }
-    public void setCode(String code) {
-        this.code = code;
-    }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setRate(Float rate) {
-        this.rate = rate;
-    }
-
-    public Float getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 

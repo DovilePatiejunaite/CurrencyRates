@@ -1,48 +1,39 @@
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.net.*;
-import java.io.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
-        ArrayList<String> dates = new ArrayList<String>();
-        ArrayList<String> codes = new ArrayList<String>();
-        for(int i = 0; i < args.length; i++) {
-            if(args[i].equals("-d")){
-                int j=i+1;
-                while(!args[j].equals("-c")){
-                    dates.add(args[j]);
-               //     System.out.println(args[j]+"-dates");
-                    i=j;
-                    j++;
-                    if(j== args.length){
+        UrlFormatter url = new UrlFormatter();
+        String[] currencies;
+        currencies = new String[]{"AUD", "BGN", "BRL", "CAD", "CHF", "CNY", "CZK", "DKK", "GBP", "HKD", "HRK", "HUF",
+                "IDR", "ILS", "INR", "ISK", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP", "PLN", "RON", "RUB",
+                "SEK", "SGD", "THB", "TRY", "USD", "ZAR"};
+        Boolean isEqual=false;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-d")) {
+                if (i + 1 == args.length) {
+                    break;
+                }
+                url.setDates(args[i + 1]);
+                break;
+            } else {
+                for(int j = 0; j<currencies.length;j++) {
+                    if(args[i].equals(currencies[j])) {
+                        isEqual = true;
                         break;
+                    } else {
+                        isEqual = false;
                     }
                 }
-            } else if(args[i].equals("-c")){
-                int j=i+1;
-                while(!args[j].equals("-d")){
-                    codes.add(args[j]);
-                //    System.out.println(args[j]+"-codes");
-                    i=j;
-                    j++;
-                    if(j== args.length){
-                        break;
-                    }
+                if(isEqual){
+                    url.getCurrencyCodes().add(args[i]);
+                } else {
+                    System.out.println("!Neteisingas valiutos kodas -"+args[i]+"!");
                 }
             }
-           // System.out.println(args[i]+" args");
         }
-        DataExtractor d = new DataExtractor();
-        Counter c = new Counter();
-        UrlFormatter u = new UrlFormatter();
-        u.setCurrencyCodes(codes);
-        u.setDates(dates);
-        c.count( d.download(u.createUrl()));
-        for(int i=0;i < codes.size() ;i++){
-            System.out.println(codes.get(i));
+            DataExtractor data = new DataExtractor(url.createUrls());
+            Counter c = new Counter();
+            c.count(data.download(url));
         }
-    }
 }

@@ -1,58 +1,40 @@
-import sun.plugin2.os.windows.FLASHWINFO;
-
+import java.math.BigDecimal;
 import java.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import model.Rate;
-public class DataExtractor{
-    String url;
-    String[] date;
-    String[] CurrencyCodes;
+public class DataExtractor {
+    ArrayList<String> urls;
 
-    public void setCurrencyCode(String[] currencyCode) {
-        CurrencyCodes = currencyCode;
+    DataExtractor(ArrayList<String> urls){
+        this.urls = urls;
     }
-
-    public void setDate(String[] date) {
-        this.date = date;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String[] getCurrencyCode() {
-        return CurrencyCodes;
-    }
-
-    public String[] getDate() {
-        return date;
-    }
-
-    public List<Rate> download(ArrayList<String> urls) {
+    public List<Rate> download(UrlFormatter u) {
         List<Rate> currency = new ArrayList<>();
         for(int i=0;i<urls.size();i++) {
             try {
-                // opcija -d - toliau paduodams datos - atskirtos tarpais arba periodai atskirti "/" .
-                //Jeigu nepaduota jokių valiutų kodai, tik data - išvedama visų valiutų kursai, nuo datos pradžios iki pabaigos ir visų kursų santykiai
-                //Jeigu paduoti tik valiutų kursai - išvedama paskutinės galimos kurso datos (dabartinės) visus
-                System.out.println(urls.get(i));
-                URL ur = new URL(urls.get(i));
+                String url = urls.get(i);
+                URL ur = new URL(url);
                 Scanner s = new Scanner(ur.openStream());
-                System.out.println("Pirma eilute");
-                System.out.println(s.nextLine());
-                System.out.println("TOLIAU");
-                String input = "";
-                while (s.hasNextLine()) {
+                s.nextLine();
+                String input;
+                if(!s.hasNextLine()){
+                    System.out.println("!Šią dieną nebuvo paskelbti valiutų kursai, rodomi vėliausiai paskelbti.!");
+                    while(!s.hasNextLine()){
+                        s.close();
+                        url = u.refactorUrl(url);
+                        ur = new URL(url);
+                        s = new Scanner(ur.openStream());
+                        s.nextLine();
+                    }
+                }
+                while(s.hasNextLine()) {
                     input = s.nextLine().replace("\"", "").replace(",", ".");
                     String[] all = input.split(";");
-                    System.out.println(input);
-                    Rate rate = new Rate(all[0], all[1], Float.parseFloat(all[2]), all[3]);
+                    System.out.println(input.replace(";","  "));
+                    BigDecimal rateDecimal = new BigDecimal(all[2]);
+                    Rate rate = new Rate(all[0], all[1], rateDecimal);
                     currency.add(rate);
                 }
             } catch (IOException ex) {
