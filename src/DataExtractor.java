@@ -2,26 +2,35 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import model.Rate;
+
+//Klasė, skirta atsiųsti duomenis apie valiutų kursus
+
 public class DataExtractor {
-    ArrayList<String> urls;
+    private ArrayList<String> urls;
 
     DataExtractor(ArrayList<String> urls){
         this.urls = urls;
     }
+
+    //Pagal surinktus url, atsisiunčiame valiutų kursus
+
     public List<Rate> download(UrlFormatter u) {
-        List<Rate> currency = new ArrayList<>();
-        for(int i=0;i<urls.size();i++) {
-            try {
-                String url = urls.get(i);
+        System.out.println("\nVALIUTŲ KURSAI PASIRINKTU LAIKOTARPIU\n");
+        List<Rate> rates = new ArrayList<>();
+        try {
+            for (String url : urls) {
+                String date = u.getDateFromUrl(url);
                 URL ur = new URL(url);
                 Scanner s = new Scanner(ur.openStream());
                 s.nextLine();
                 String input;
-                if(!s.hasNextLine()){
-                    System.out.println("!Šią dieną nebuvo paskelbti valiutų kursai, rodomi vėliausiai paskelbti.!");
-                    while(!s.hasNextLine()){
+
+                //Jei nurodyta data, jokių kursų nebuvo paskelbta, pakeičiame datą sumažinę viena diena
+                //ir vėl siunčiame duomenis
+
+                if (!s.hasNextLine()) {
+                    while (!s.hasNextLine()) {
                         s.close();
                         url = u.refactorUrl(url);
                         ur = new URL(url);
@@ -29,18 +38,22 @@ public class DataExtractor {
                         s.nextLine();
                     }
                 }
-                while(s.hasNextLine()) {
+
+                //Atspausdiname visus valiutų kursus nurodytų datų laikotarpyje ir sudedame į objektų masyvą
+
+                while (s.hasNextLine()) {
                     input = s.nextLine().replace("\"", "").replace(",", ".");
                     String[] all = input.split(";");
-                    System.out.println(input.replace(";","  "));
+                    System.out.println(all[0] + " " + all[1] + " " + all[2] + " " + date);
                     BigDecimal rateDecimal = new BigDecimal(all[2]);
                     Rate rate = new Rate(all[0], all[1], rateDecimal);
-                    currency.add(rate);
+                    rates.add(rate);
                 }
-            } catch (IOException ex) {
-
+                s.close();
             }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
-        return currency;
+        return rates;
     }
 }
