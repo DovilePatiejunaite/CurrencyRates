@@ -10,6 +10,7 @@ Jei pasirinktas laikotarpis, kurio metu dar nebuvo pradėti skelbti valiutų kur
 Paleidimas:
 
 javac Main.java
+
 java Main <valiutų kursų kodai> -d <laikotarpio_pradžia>/<laikotarpio_pabaiga>
 
 Pavyzdžiai:
